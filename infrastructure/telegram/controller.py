@@ -3,7 +3,7 @@ from typing import Any, Mapping
 from core.repositories.conversation import ConversationRepository
 from infrastructure.telegram.utils.exceptions import \
     InvalidUpdateValueException
-from infrastructure.telegram.utils.mapper import Mapper
+from infrastructure.telegram.utils.update_factory import UpdateFactory
 from utils.logging import logger
 
 UnpackedUpdate = tuple[int, str, Mapping[Any, Any]]
@@ -20,7 +20,7 @@ class TelegramController:
         """
         update_id, update_type, raw_update_obj = cls._unpack_update(update)
         logger.debug(f"update_id: {update_id} - {update_type}")
-        update_obj = Mapper[object].to_domain(update_type, raw_update_obj)
+        update_obj = UpdateFactory.create(update_type, raw_update_obj)
         await cls.conversation.process_event(update_obj)
 
     @staticmethod

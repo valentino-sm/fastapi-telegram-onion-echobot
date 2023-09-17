@@ -1,9 +1,9 @@
 from core.domains.message import Message
 from core.repositories.messenger import MessengerRepository
+from infrastructure.telegram.mappers.message import MapperMessage
 from infrastructure.telegram.utils.api import TelegramAPI
 from infrastructure.telegram.utils.exceptions import (
     FailedMessageResponseException, WebhookException)
-from infrastructure.telegram.utils.mapper import Mapper
 
 
 class TelegramClient(MessengerRepository):
@@ -18,6 +18,6 @@ class TelegramClient(MessengerRepository):
         response = await TelegramAPI.send_message(chat_id=chat_id, text=text)
         match response:
             case {"ok": True, "result": raw_message}:
-                return Mapper[Message].to_domain("message", raw_message)
+                return MapperMessage.to_domain(raw_message)
             case _:
                 raise FailedMessageResponseException(response)

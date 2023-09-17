@@ -3,13 +3,15 @@ from typing import Any, Mapping
 from pydantic import TypeAdapter
 
 from core.domains.message import Message
+from infrastructure.telegram.mappers.exception_wrapper import exception_wrapper
 from infrastructure.telegram.repositories.mapper import MapperRepository
 
 
-class Mapper(MapperRepository[Message]):
+class MapperMessage(MapperRepository[Message]):
     adapter_message = TypeAdapter(Message)
 
     @classmethod
+    @exception_wrapper
     def to_domain(cls, object_raw: Mapping[Any, Any]) -> Message:
         message = object_raw
         result = {

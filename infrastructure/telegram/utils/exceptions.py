@@ -14,11 +14,11 @@ class InvalidUpdateValueException(TelegramException):
 
 
 class UnknownMapperException(TelegramException):
-    """Context from Function utils/mapper.py:to_domain"""
+    """Context from Function utils/update_factory.py:create"""
 
 
 class UnsuccessMapperException(TelegramException):
-    """Context from Function utils/mapper.py:to_domain"""
+    """Context from Function mappers/exception_wrapper.py:exception_wrapper"""
 
 
 class WebhookException(TelegramException):

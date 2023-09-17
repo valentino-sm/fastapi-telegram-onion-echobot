@@ -34,10 +34,12 @@ class TestMapping(unittest.TestCase):
         from mock_data import tg_message
 
         from core.domains.message import Message
-        from infrastructure.telegram.utils.mapper import Mapper
+        from infrastructure.telegram.utils.update_factory import UpdateFactory
 
         # SuccessMapping
-        message = Mapper[Message].to_domain("message", tg_message)
+        message = UpdateFactory.create("message", tg_message)
+        self.assertIsInstance(message, Message)
+        assert isinstance(message, Message)  # pyright hack
         self.assertEqual(message.id, 1)
 
         # UnknownMapper
@@ -45,7 +47,7 @@ class TestMapping(unittest.TestCase):
             UnknownMapperException
 
         self.assertRaises(
-            UnknownMapperException, Mapper.to_domain, "message_bug", tg_message
+            UnknownMapperException, UpdateFactory.create, "message_bug", tg_message
         )
 
         # UnsuccessMapper
@@ -54,7 +56,7 @@ class TestMapping(unittest.TestCase):
 
         tg_message["message_id"] = "error_text"
         self.assertRaises(
-            UnsuccessMapperException, Mapper.to_domain, "message", tg_message
+            UnsuccessMapperException, UpdateFactory.create, "message", tg_message
         )
 
 
@@ -125,7 +127,7 @@ class TestControllerProcessUpdates(unittest.IsolatedAsyncioTestCase):
         # Success
         from mock_data import tg_message
 
-        from infrastructure.telegram.utils.mapper import Mapper
+        from infrastructure.telegram.utils.update_factory import UpdateFactory
 
         TelegramController.conversation = mock.AsyncMock()
         process_event = mock.AsyncMock()
@@ -133,7 +135,7 @@ class TestControllerProcessUpdates(unittest.IsolatedAsyncioTestCase):
 
         update = {"update_id": 42, "message": tg_message}
         await TelegramController.process_update(update)
-        process_event.assert_called_with(Mapper.to_domain("message", tg_message))
+        process_event.assert_called_with(UpdateFactory.create("message", tg_message))
 
         self.logger_mock.stop()
 
