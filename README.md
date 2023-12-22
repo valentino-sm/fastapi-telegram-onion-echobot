@@ -1,7 +1,5 @@
 # FastAPI Telegram Onion Echobot
-FastAPI simple telegram bot with onion architecture that responds with the same text - echobot.
-
-![Diagram](.github/diagram.png)
+FastAPI simple telegram bot with onion architecture that responds with the same text.
 
 ### Usage
 ```sh
@@ -17,4 +15,4 @@ docker compose up
 
 #### For Education purposes only.
 Telegram may send repeated updates.
-You can use Redis/memcached for production.
+You may use redis/memcached for production.
